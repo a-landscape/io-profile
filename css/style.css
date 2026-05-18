@@ -324,13 +324,7 @@ body {
 .coin-front { background: transparent; position: relative; }
 
 #coin-liquid-fill {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FFC5FC 0%, #89CAFF 100%);
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  opacity: 1;
+  display: none;
 }
 
 .coin-front-icon {

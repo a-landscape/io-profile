@@ -61,8 +61,8 @@
     const GRAD_SPEED = 0.008;
     const gradPhase  = (t * GRAD_SPEED) % 1;
     const barGrad = ctx.createLinearGradient(W * (1 - gradPhase), 0, -W * gradPhase, 0);
-    barGrad.addColorStop(0, 'rgba(250,250,250,0.20)');
-    barGrad.addColorStop(1, 'rgba(238,238,238,0.20)');
+    barGrad.addColorStop(0, 'rgba(250,250,250,0.55)');
+    barGrad.addColorStop(1, 'rgba(238,238,238,0.55)');
 
     bars.forEach((bar, i) => {
 
