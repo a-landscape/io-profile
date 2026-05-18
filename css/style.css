@@ -259,7 +259,6 @@ body {
   animation: ringRotate 4s linear infinite;
   position: relative;
   flex-shrink: 0;
-  cursor: pointer;
   perspective: 900px;
 }
 

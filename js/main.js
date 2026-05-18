@@ -224,10 +224,3 @@ function resetCard(idx) {
   if (activeIdx === idx) activeIdx = -1;
 }
 
-/* ============================================================
-   COIN — hover pause/resume
-============================================================ */
-const oRing = document.getElementById('oRing');
-const coin  = document.getElementById('coin');
-oRing.addEventListener('mouseenter', () => { coin.style.animationPlayState = 'paused'; });
-oRing.addEventListener('mouseleave', () => { coin.style.animationPlayState = 'running'; });
