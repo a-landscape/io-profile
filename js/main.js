@@ -103,14 +103,14 @@
    TRACK DATA
 ============================================================ */
 const TRACKS = [
-  { id: '01', title: 'NO BATID',          genre: 'BRAZILIAN PHONK', src: 'material/NO_BATID.mp3',        jacket: 'NO_BAT.jpg'          },
+  { id: '01', title: 'NO BATIDÃO',         genre: 'BRAZILIAN PHONK', src: 'material/NO_BATID.mp3',        jacket: 'NO_BAT.jpg'          },
   { id: '02', title: 'PASSO BEM',         genre: 'BRAZILIAN PHONK', src: 'material/PASSO_BEM.m4a',       jacket: 'PASSO_BEM.jpg'       },
   { id: '03', title: 'VAI VAI TRAIR',     genre: 'BRAZILIAN PHONK', src: 'material/VAI_VAI_TRAIR.mp3',   jacket: 'vai.jpg'             },
   { id: '04', title: 'NOMI XD BLAH!',     genre: 'BRAZILIAN PHONK', src: 'material/Nomi_XD_BLAH!.mp3',  jacket: 'Nomi_XD.jpg'         },
   { id: '05', title: 'AL NACER!',         genre: 'BRAZILIAN PHONK', src: 'material/AL_NACER!.mp3',       jacket: 'AL_NACER!.jpg'       },
   { id: '06', title: 'MONTAGEM BAILÃO',   genre: 'BRAZILIAN PHONK', src: 'material/MONTAGEM_BAILÃO.mp3', jacket: 'MONTAGEM_BAILÃO.jpg' },
   { id: '07', title: 'LUZ ROJA',          genre: 'BRAZILIAN PHONK', src: 'material/LUZ_ROJA.mp3',        jacket: 'LUZ_ROJA.jpg'        },
-  { id: '08', title: 'MONTAGEM TO',       genre: 'BRAZILIAN PHONK', src: 'material/MONTAGEM_TO.m4a',     jacket: 'MONTAGEM_TO.jpg'     },
+  { id: '08', title: 'MONTAGEM TOMADA',   genre: 'BRAZILIAN PHONK', src: 'material/MONTAGEM_TO.m4a',     jacket: 'MONTAGEM_TO.jpg'     },
   { id: '09', title: 'LUNA BALA',         genre: 'BRAZILIAN PHONK', src: 'material/LUNA_BALA.mp3',       jacket: 'LUNA-BALA.jpg'       },
   { id: '10', title: 'MONTAGEM XONADA',   genre: 'BRAZILIAN PHONK', src: 'material/MONTAGEM_XONADA.mp3', jacket: 'MONTAGEM_XONADA.jpg' },
   { id: '11', title: 'PXLWYSE',           genre: 'BRAZILIAN PHONK', src: 'material/PXLWYSE.m4a',         jacket: 'PXLWYSE.jpg'         },

@@ -38,7 +38,7 @@
   function spawn(x, y, vel) {
     hue     = (hue     + 0.06) % 1;
     coinHue = (coinHue + 0.05) % 1;
-    fill    = Math.min(1, fill + 0.008);   // fills screen in ~120 rubs
+    fill    = Math.min(1, fill + 0.018);   // fills screen in ~55 rubs
 
     const jx = x + (Math.random()-.5) * 20;
     const jy = y + (Math.random()-.5) * 20;
@@ -48,8 +48,8 @@
 
     /* immediate small splash committed to acc */
     const g = accCtx.createRadialGradient(jx, jy, 0, jx, jy, r*.4);
-    g.addColorStop(0, col(hue, .55));
-    g.addColorStop(1, col((hue+.2)%1, 0));
+    g.addColorStop(0, `rgba(255,228,254,0.50)`);
+    g.addColorStop(1, `rgba(218,238,255,0)`);
     accCtx.fillStyle = g;
     accCtx.beginPath();
     accCtx.arc(jx, jy, r*.4, 0, Math.PI*2);
@@ -75,14 +75,24 @@
        Entire background fills simultaneously (not just near O).
        At fill=1 alpha=0.93 → white background completely gone. */
     if (fill > 0) {
-      const W = canvas.width, H = canvas.height;
-      const a = fill * 0.88;
-      const bg = ctx.createLinearGradient(0, 0, W, H);
-      bg.addColorStop(0,    `rgba(255,228,254,${a})`);  // 明るいピンク
-      bg.addColorStop(0.5,  `rgba(242,236,255,${a})`);  // 白に近いラベンダー
-      bg.addColorStop(1,    `rgba(218,238,255,${a})`);  // 明るいブルー
+      const o  = getO();
+      const cx = o ? o.cx : canvas.width  * 0.5;
+      const cy = o ? o.cy : canvas.height * 0.5;
+      /* 画面の角まで届く最大距離 */
+      const maxD = Math.hypot(
+        Math.max(cx, canvas.width  - cx),
+        Math.max(cy, canvas.height - cy)
+      );
+      /* fill が増えるほど半径が外へ広がる */
+      const radius = fill * maxD * 1.12;
+
+      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+      bg.addColorStop(0,    `rgba(255,228,254,0.90)`);  // IO中心: 明るいピンク
+      bg.addColorStop(0.55, `rgba(242,236,255,0.85)`);  // ラベンダー
+      bg.addColorStop(0.85, `rgba(218,238,255,0.78)`);  // 明るいブルー
+      bg.addColorStop(1,    `rgba(218,238,255,0)`);     // 境界をソフトに
       ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     /* ── Layer 2: local accumulated ink strokes ── */
@@ -94,9 +104,9 @@
       b.r = Math.min(b.r + 3.5, b.maxR);
 
       const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-      g.addColorStop(0,   col(b.hue,         .82));
-      g.addColorStop(.45, col((b.hue+.15)%1, .42));
-      g.addColorStop(1,   col((b.hue+.30)%1,  0));
+      g.addColorStop(0,   `rgba(255,228,254,0.82)`);
+      g.addColorStop(.45, `rgba(238,232,255,0.45)`);
+      g.addColorStop(1,   `rgba(218,238,255,0)`);
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
@@ -104,9 +114,9 @@
 
       if (b.r >= b.maxR) {
         const g2 = accCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.maxR);
-        g2.addColorStop(0,   col(b.hue,         .55));
-        g2.addColorStop(.5,  col((b.hue+.15)%1, .28));
-        g2.addColorStop(1,   col((b.hue+.30)%1,  0));
+        g2.addColorStop(0,   `rgba(255,228,254,0.52)`);
+        g2.addColorStop(.5,  `rgba(238,232,255,0.28)`);
+        g2.addColorStop(1,   `rgba(218,238,255,0)`);
         accCtx.fillStyle = g2;
         accCtx.beginPath();
         accCtx.arc(b.x, b.y, b.maxR, 0, Math.PI*2);
