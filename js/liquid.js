@@ -33,9 +33,9 @@
   let hue  = 0;
   let fill = 0;  // 0 → 1: how much the screen is filled (very slow)
 
-  /* coin inner overlay */
+  /* coin inner overlay — always visible, just update color on rub */
   const coinFill = document.getElementById('coin-liquid-fill');
-  let coinOpacity = 0;
+  let coinHue = 0;
 
   function spawn(x, y, vel) {
     hue  = (hue + 0.07) % 1;
@@ -58,8 +58,8 @@
     accCtx.arc(jx, jy, r * .45, 0, Math.PI * 2);
     accCtx.fill();
 
-    /* tint inside coin — shows up early, before bg fill */
-    coinOpacity = Math.min(0.82, coinOpacity + 0.04);
+    /* shift coin inner colour toward current hue */
+    coinHue = (coinHue + 0.05) % 1;
   }
 
   /* ── mouse: only trigger inside / near the O ring ── */
@@ -133,11 +133,10 @@
       }
     }
 
-    /* coin inner tint — update via DOM */
+    /* shift coin inner gradient colour as user rubs */
     if (coinFill) {
       coinFill.style.background =
-        `radial-gradient(circle at center, ${col(hue, 1)}, ${col((hue+.4)%1, 1)} 70%)`;
-      coinFill.style.opacity = coinOpacity;
+        `linear-gradient(135deg, ${col(coinHue, 1)} 0%, ${col((coinHue + .5) % 1, 1)} 100%)`;
     }
 
     requestAnimationFrame(draw);
