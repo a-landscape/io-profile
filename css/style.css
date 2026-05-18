@@ -321,7 +321,17 @@ body {
   overflow: hidden;
 }
 
-.coin-front { background: transparent; }
+.coin-front { background: transparent; position: relative; }
+
+#coin-liquid-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  mix-blend-mode: color;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
 
 .coin-front-icon {
   width: 100%;

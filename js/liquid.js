@@ -31,11 +31,16 @@
 
   const blobs = [];
   let hue  = 0;
-  let fill = 0;   // 0 → 1: screen fill level
+  let fill = 0;  // 0 → 1: how much the screen is filled (very slow)
+
+  /* coin inner overlay */
+  const coinFill = document.getElementById('coin-liquid-fill');
+  let coinOpacity = 0;
 
   function spawn(x, y, vel) {
     hue  = (hue + 0.07) % 1;
-    fill = Math.min(1, fill + 0.005);
+    /* fill grows much slower — need sustained rubbing to fill screen */
+    fill = Math.min(1, fill + 0.0018);
 
     /* organic jitter */
     const jx = x + (Math.random() - .5) * 20;
@@ -44,14 +49,17 @@
 
     blobs.push({ x: jx, y: jy, r: r * .22, maxR: r, hue });
 
-    /* small immediate splash committed to acc right away */
+    /* immediate small splash committed to acc */
     const g = accCtx.createRadialGradient(jx, jy, 0, jx, jy, r * .45);
-    g.addColorStop(0, col(hue, .52));
+    g.addColorStop(0, col(hue, .55));
     g.addColorStop(1, col((hue + .2) % 1, 0));
     accCtx.fillStyle = g;
     accCtx.beginPath();
     accCtx.arc(jx, jy, r * .45, 0, Math.PI * 2);
     accCtx.fill();
+
+    /* tint inside coin — shows up early, before bg fill */
+    coinOpacity = Math.min(0.82, coinOpacity + 0.04);
   }
 
   /* ── mouse: only trigger inside / near the O ring ── */
@@ -74,8 +82,8 @@
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    /* Layer 1 — radial background fill radiating from O, grows with fill */
-    if (fill > 0.01) {
+    /* Layer 1 — radial bg fill, only appears after significant rubbing (fill > 0.25) */
+    if (fill > 0.25) {
       const o  = getO();
       const cx = o ? o.cx : canvas.width  * .5;
       const cy = o ? o.cy : canvas.height * .5;
@@ -83,11 +91,13 @@
         Math.max(cx, canvas.width  - cx),
         Math.max(cy, canvas.height - cy)
       );
+      /* normalize so alpha starts from 0 at fill=0.25 and reaches max at fill=1 */
+      const t = (fill - 0.25) / 0.75;
 
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxD);
-      g.addColorStop(0,   col(hue,              fill * .85));
-      g.addColorStop(.45, col((hue + .35) % 1,  fill * .68));
-      g.addColorStop(1,   col((hue + .65) % 1,  fill * .52));
+      g.addColorStop(0,   col(hue,              t * .82));
+      g.addColorStop(.45, col((hue + .35) % 1,  t * .65));
+      g.addColorStop(1,   col((hue + .65) % 1,  t * .50));
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
@@ -109,7 +119,7 @@
       ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
       ctx.fill();
 
-      /* fully grown → commit to acc canvas, remove from active pool */
+      /* fully grown → commit to acc, remove from active pool */
       if (b.r >= b.maxR) {
         const g2 = accCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.maxR);
         g2.addColorStop(0,   col(b.hue,              .55));
@@ -121,6 +131,13 @@
         accCtx.fill();
         blobs.splice(i, 1);
       }
+    }
+
+    /* coin inner tint — update via DOM */
+    if (coinFill) {
+      coinFill.style.background =
+        `radial-gradient(circle at center, ${col(hue, 1)}, ${col((hue+.4)%1, 1)} 70%)`;
+      coinFill.style.opacity = coinOpacity;
     }
 
     requestAnimationFrame(draw);
