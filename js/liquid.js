@@ -3,7 +3,7 @@
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  /* ── offscreen: ink accumulates here permanently ── */
+  /* ── offscreen: local ink strokes accumulate here ── */
   const acc    = document.createElement('canvas');
   const accCtx = acc.getContext('2d');
 
@@ -16,7 +16,7 @@
   resize();
   window.addEventListener('resize', resize);
 
-  /* ── palette: #FFC5FC → #89CAFF ── */
+  /* ── palette: #FFC5FC (pink) → #89CAFF (blue) ── */
   function col(t, a) {
     t = Math.max(0, Math.min(1, t));
     return `rgba(${~~(255+(137-255)*t)},${~~(197+(202-197)*t)},${~~(252+(255-252)*t)},${a})`;
@@ -29,57 +29,33 @@
     return { cx: rc.left + rc.width*.5, cy: rc.top + rc.height*.5, r: rc.width*.5 };
   }
 
-  const quickBlobs  = [];   // immediate cursor feedback
-  const spreadBlobs = [];   // slow-growing large blobs, max 4 at a time
-  const MAX_SPREAD  = 4;
-
+  const blobs = [];
   let hue     = 0;
+  let fill    = 0;    // 0 → 1: drives full-screen background
   let coinHue = 0;
   const coinFill = document.getElementById('coin-liquid-fill');
 
-  /* ── spawn: called when cursor moves near O ── */
   function spawn(x, y, vel) {
-    hue     = (hue     + 0.07) % 1;
+    hue     = (hue     + 0.06) % 1;
     coinHue = (coinHue + 0.05) % 1;
+    fill    = Math.min(1, fill + 0.008);   // fills screen in ~120 rubs
 
-    const jx = x + (Math.random()-.5)*22;
-    const jy = y + (Math.random()-.5)*22;
-    const r  = 65 + vel * 1.8;
+    const jx = x + (Math.random()-.5) * 20;
+    const jy = y + (Math.random()-.5) * 20;
+    const r  = 70 + vel * 2.0;
 
-    /* quick blob */
-    quickBlobs.push({ x:jx, y:jy, r:r*.22, maxR:r, hue });
+    blobs.push({ x: jx, y: jy, r: r*.25, maxR: r, hue });
 
-    /* tiny immediate splash to acc */
+    /* immediate small splash committed to acc */
     const g = accCtx.createRadialGradient(jx, jy, 0, jx, jy, r*.4);
-    g.addColorStop(0, col(hue, .50));
+    g.addColorStop(0, col(hue, .55));
     g.addColorStop(1, col((hue+.2)%1, 0));
     accCtx.fillStyle = g;
     accCtx.beginPath();
     accCtx.arc(jx, jy, r*.4, 0, Math.PI*2);
     accCtx.fill();
-
-    /* spread blob — grows from O centre to screen edge */
-    if (spreadBlobs.length < MAX_SPREAD) {
-      const o    = getO();
-      const sx   = o ? o.cx : x;
-      const sy   = o ? o.cy : y;
-      const maxD = Math.hypot(
-        Math.max(sx, canvas.width  - sx),
-        Math.max(sy, canvas.height - sy)
-      ) * 1.05;
-      spreadBlobs.push({
-        x:    sx,
-        y:    sy,
-        r:    o ? o.r * .4 : 30,   // start near O size
-        maxR: maxD,
-        speed: 0.9 + Math.random() * 0.5,
-        hue:   (hue + Math.random()*.35) % 1,
-        alpha: 0.005,               // very low per-frame alpha, accumulates
-      });
-    }
   }
 
-  /* ── mouse tracking ── */
   let lx = -9999, ly = -9999;
 
   window.addEventListener('mousemove', e => {
@@ -92,39 +68,34 @@
     lx = e.clientX; ly = e.clientY;
   });
 
-  /* ── render ── */
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    /* spread blobs: paint full radial area to acc each frame, very low alpha */
-    for (let i = spreadBlobs.length-1; i >= 0; i--) {
-      const b = spreadBlobs[i];
-      b.r = Math.min(b.r + b.speed, b.maxR);
-
-      const g = accCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-      g.addColorStop(0,    col(b.hue,          b.alpha));
-      g.addColorStop(0.55, col((b.hue+.3)%1,   b.alpha * .65));
-      g.addColorStop(1,    col((b.hue+.6)%1,   0));
-      accCtx.fillStyle = g;
-      accCtx.beginPath();
-      accCtx.arc(b.x, b.y, b.r, 0, Math.PI*2);
-      accCtx.fill();
-
-      if (b.r >= b.maxR) spreadBlobs.splice(i, 1);
+    /* ── Layer 1: full-screen linear gradient, grows uniformly with fill ──
+       Entire background fills simultaneously (not just near O).
+       At fill=1 alpha=0.93 → white background completely gone. */
+    if (fill > 0) {
+      const W = canvas.width, H = canvas.height;
+      const bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0,   col(0,    fill * 0.93));  // #FFC5FC
+      bg.addColorStop(0.5, col(0.4,  fill * 0.88));  // mid
+      bg.addColorStop(1,   col(1,    fill * 0.93));  // #89CAFF
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
     }
 
-    /* draw accumulated ink as base layer */
+    /* ── Layer 2: local accumulated ink strokes ── */
     ctx.drawImage(acc, 0, 0);
 
-    /* quick blobs on top — immediate stroke feedback */
-    for (let i = quickBlobs.length-1; i >= 0; i--) {
-      const b = quickBlobs[i];
-      b.r = Math.min(b.r + 3.2, b.maxR);
+    /* ── Layer 3: actively growing blobs (cursor feedback) ── */
+    for (let i = blobs.length-1; i >= 0; i--) {
+      const b = blobs[i];
+      b.r = Math.min(b.r + 3.5, b.maxR);
 
       const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-      g.addColorStop(0,    col(b.hue,          .80));
-      g.addColorStop(.42,  col((b.hue+.15)%1,  .42));
-      g.addColorStop(1,    col((b.hue+.30)%1,  0));
+      g.addColorStop(0,   col(b.hue,         .82));
+      g.addColorStop(.45, col((b.hue+.15)%1, .42));
+      g.addColorStop(1,   col((b.hue+.30)%1,  0));
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
@@ -132,18 +103,18 @@
 
       if (b.r >= b.maxR) {
         const g2 = accCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.maxR);
-        g2.addColorStop(0,   col(b.hue,          .55));
-        g2.addColorStop(.5,  col((b.hue+.15)%1,  .28));
+        g2.addColorStop(0,   col(b.hue,         .55));
+        g2.addColorStop(.5,  col((b.hue+.15)%1, .28));
         g2.addColorStop(1,   col((b.hue+.30)%1,  0));
         accCtx.fillStyle = g2;
         accCtx.beginPath();
         accCtx.arc(b.x, b.y, b.maxR, 0, Math.PI*2);
         accCtx.fill();
-        quickBlobs.splice(i, 1);
+        blobs.splice(i, 1);
       }
     }
 
-    /* shift coin inner gradient colour */
+    /* ── Shift coin interior gradient colour on rub ── */
     if (coinFill) {
       coinFill.style.background =
         `linear-gradient(135deg, ${col(coinHue,1)} 0%, ${col((coinHue+.5)%1,1)} 100%)`;
