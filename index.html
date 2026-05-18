@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="IO - Web Designer & AIアフィリエイト初心者のポートフォリオ。デザインとAIの融合を探求するクリエイターの作品集。" />
+  <meta name="keywords" content="IO, ポートフォリオ, Webデザイン, AIアフィリエイト, PHONK" />
+  <meta name="author" content="IO" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- OGP -->
+  <meta property="og:title" content="IO | Portfolio" />
+  <meta property="og:description" content="Web Designer & AIアフィリエイト初心者のポートフォリオ。デザインとAIの融合を探求するクリエイター。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://io-portfolio.example.com/" />
+  <meta property="og:image" content="material/icon.png" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="IO | Portfolio" />
+  <meta name="twitter:description" content="Web Designer & AIアフィリエイト初心者のポートフォリオ。" />
+  <meta name="twitter:image" content="material/icon.png" />
+
+  <title>IO | Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;700;900&family=Noto+Sans+JP:wght@100;300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ========== FIXED HERO ========== -->
+  <section class="hero-fixed" aria-label="メインビジュアル">
+
+    <!-- Top marquee — weight 200, stylish -->
+    <div class="hero-marquee" aria-hidden="true">
+      <div class="hero-marquee-inner">
+        <span>IO — Web Design &nbsp;/&nbsp; AI &nbsp;/&nbsp; Affiliate &nbsp;&nbsp;&nbsp; Portfolio 2026 &nbsp;&nbsp;&nbsp; Creative Direction &nbsp;&nbsp;&nbsp; </span>
+        <span>IO — Web Design &nbsp;/&nbsp; AI &nbsp;/&nbsp; Affiliate &nbsp;&nbsp;&nbsp; Portfolio 2026 &nbsp;&nbsp;&nbsp; Creative Direction &nbsp;&nbsp;&nbsp; </span>
+      </div>
+    </div>
+
+    <!-- Decorative labels -->
+    <div class="about-overlay" aria-label="About IO">
+      <span class="about-corner-tag">IO — Designer &amp; Creator</span>
+    </div>
+
+    <!-- Left edge vertical tag -->
+    <span class="hero-left-tag" aria-hidden="true">
+      <span>✦</span><span>✦</span><span>✦</span>
+    </span>
+
+    <!-- Left hero block: IO only — vertically centered -->
+    <div class="hero-block">
+      <div class="io-container avatar" aria-label="IO">
+        <div class="letter-i" aria-hidden="true"></div>
+        <div class="o-ring" id="oRing" role="img" aria-label="IOアイコン">
+          <div class="coin" id="coin">
+            <div class="coin-face coin-front">
+              <img
+                src="material/icon.png"
+                alt="IO icon"
+                class="coin-front-icon"
+                draggable="false"
+                oncontextmenu="return false"
+              />
+            </div>
+            <div class="coin-face coin-back"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right block: Portfolio label + profile text — vertically centered -->
+    <div class="hero-right" aria-label="About">
+      <div class="about-label">
+        <span>Portfolio / 2026</span>
+        <span class="about-sub">Web Design × AI × Affiliate</span>
+      </div>
+      <div class="about-text-block">
+        <p>
+          Web業界で中小〜大手の<br />
+          デザイン制作に関わってきたけど、<br />
+          時間に追われながらのデザイン・<br />
+          HTML指示出しに公開後の修正⋯<br />
+          正直作業に疲れちゃった<br />
+          <br />
+          デザインしか能がない私を、<br />
+          絶大なパワーで引き上げてくれたのが<br />
+          AIとの出会起。<br />
+          AIもアフィリエイトも<br />
+          「ゼロから勉強中」の初心者いおとして<br />
+          がんばるぞ！応援してねん
+        </p>
+      </div>
+    </div>
+
+    <!-- Visualizer — z-index 0 -->
+    <div class="wave-container" aria-hidden="true">
+      <canvas id="visualizerCanvas"></canvas>
+    </div>
+
+  </section>
+
+  <!-- spacer so PHONK section scrolls over hero -->
+  <div class="scroll-spacer" aria-hidden="true"></div>
+
+  <!-- ========== PHONK SECTION ========== -->
+  <section class="phonk-section" aria-label="Favorite PHONK">
+    <!-- glitch.js renders bg.png with glitch/sparkle effects onto this canvas -->
+    <canvas id="glitch-bg" aria-hidden="true"></canvas>
+    <!-- dark overlay for readability (z-index 1, above canvas) -->
+    <div class="phonk-overlay" aria-hidden="true"></div>
+    <!-- content (z-index 2) -->
+    <div class="phonk-content">
+      <header class="phonk-header">
+        <p class="phonk-eyebrow">Music Selection</p>
+        <h2 class="phonk-title">Favorite <span>PHONK</span></h2>
+      </header>
+      <div class="tracks-grid" id="tracksGrid"></div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <span class="footer-logo">IO</span>
+    <span class="footer-copy">&copy; 2026 IO. All rights reserved.</span>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/glitch.js"></script>
+</body>
+</html>

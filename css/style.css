@@ -1,0 +1,565 @@
+/* ============================================================
+   RESET & VARIABLES
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --text: #000000;
+  --text-sub: rgba(0,0,0,0.50);
+  --text-muted: rgba(0,0,0,0.30);
+  --dark-navy: #050810;
+  --neon-blue: #00d4ff;
+  --neon-blue-dim: rgba(0,212,255,0.6);
+  --neon-pink: #ff2d78;
+  --neon-pink-dim: rgba(255,45,120,0.6);
+  --soft-grad: linear-gradient(135deg, #FFC5FC 0%, #89CAFF 100%);
+
+  --ring-size: clamp(4.8rem, 16vw, 14.4rem);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  background: var(--white);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   HERO — FIXED
+============================================================ */
+.hero-fixed {
+  position: fixed;
+  inset: 0;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* ============================================================
+   ABOUT OVERLAY  (z-index 1 — below visualizer)
+============================================================ */
+.about-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  padding-right: 2.0rem;
+}
+
+/* ============================================================
+   HERO MARQUEE — top, weight 200
+============================================================ */
+.hero-marquee {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 4;
+  pointer-events: none;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+
+.hero-marquee-inner {
+  display: inline-flex;
+  animation: heroMarquee 32s linear infinite;
+}
+
+@keyframes heroMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.hero-marquee span {
+  font-size: clamp(1.0rem, 2vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--black);
+  line-height: 2.2;
+  padding-right: 3rem;
+}
+
+/* ============================================================
+   HERO LEFT TAG — vertical, colorful, aligned to IO left edge
+============================================================ */
+.hero-left-tag {
+  position: absolute;
+  left: 2.0rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.55rem;
+  color: var(--black);
+  z-index: 3;
+  pointer-events: none;
+  line-height: 1;
+}
+
+/* ============================================================
+   HERO BLOCK — IO + profile, left side, vertically centered
+============================================================ */
+.hero-block {
+  position: absolute;
+  left: calc(10% + 80px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+  z-index: 3;
+}
+
+/* PORTFOLIO / 2026 — inside .hero-right, flows naturally */
+.about-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  line-height: 1;
+}
+
+.about-label > span:first-child {
+  font-size: clamp(1.4rem, 3vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+.about-sub {
+  font-size: 0.46rem;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-weight: 300;
+}
+
+.about-corner-tag {
+  writing-mode: vertical-rl;
+  font-size: 0.50rem;
+  letter-spacing: 0.28em;
+  color: var(--black);
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+
+/* ============================================================
+   HERO RIGHT — Portfolio label + profile, right side, vertically centered
+============================================================ */
+.hero-right {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  z-index: 3;
+  max-width: 320px;
+}
+
+/* ============================================================
+   PROFILE TEXT — inside .hero-right
+============================================================ */
+.about-text-block {
+  max-width: 280px;
+  text-align: left;
+  pointer-events: none;
+}
+
+.about-text-block p {
+  font-size: 0.82rem;
+  line-height: 1.95;
+  color: #000000;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   IO LOGOTYPE
+============================================================ */
+.io-container {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  user-select: none;
+}
+
+/* I — vertical line, same height as O ring */
+.letter-i {
+  width: 10px;
+  height: calc(var(--ring-size) * 0.82);
+  background: var(--black);
+  flex-shrink: 0;
+}
+
+/*
+  Rotating rainbow gradient ring on the O.
+  @property lets us animate the conic-gradient start angle directly.
+  mask cuts the background into a donut so the ring width = --ring-border.
+*/
+@property --ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes ringRotate {
+  from { --ring-angle: 0deg; }
+  to   { --ring-angle: 360deg; }
+}
+
+/*
+  border + background-clip でリングを実現。
+  太さを変えたい場合は border: の値（2px）を変えるだけ。
+*/
+.o-ring {
+  width: var(--ring-size);
+  height: var(--ring-size);
+  border-radius: 50%;
+  border: 10px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(
+      from var(--ring-angle),
+      /* bright leading flash */
+      #ffffff       0deg,
+      #ff22bb       4deg,
+      /* rainbow sweep */
+      #ff3366      22deg,
+      #ff8800      70deg,
+      #ffe000     128deg,
+      #44ff88     188deg,
+      #00ccff     248deg,
+      #8833ff     300deg,
+      #ff22bb     340deg,
+      /* transparent tail → cyber gap */
+      rgba(255,34,187,0.45)  350deg,
+      rgba(255,34,187,0.08)  357deg,
+      #ffffff     360deg
+    ) border-box;
+  animation: ringRotate 4s linear infinite;
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+  perspective: 900px;
+}
+
+/* Inner coin — only this rotates */
+.coin {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  animation: coinSpin 10s linear infinite;
+}
+
+/*
+  Coin animation — 10s linear, 1080deg total (3×360 → seamless)
+
+  Timing  |  deg    |  speed (deg/s)
+  ─────────────────────────────────────────
+  0-10%   |  hold front (0→0)              pause
+  10-18%  |  90     |  112   slow wind-up
+  18-21%  |  180    |  300   approach back
+  21-24%  |  270    |  300   through back
+  24-26%  |  360    |  450   FAST snap to front ← "last part faster"
+  26-32%  |  hold
+  32-35%  |  540    |  600   BURST flip 1
+  35-37%  |  720    |  900   BURST flip 2 (very fast)
+  37-44%  |  hold after burst
+  44-52%  |  810    |  112   slow wind-up
+  52-55%  |  900    |  300   approach back
+  55-57.5%|  990    |  360   through back
+  57.5-60%|  1080   |  360   fast snap
+  60-100% |  hold (4s long rest on front)
+*/
+@keyframes coinSpin {
+  0%     { transform: rotateY(0deg); }
+  10%    { transform: rotateY(0deg); }
+  18%    { transform: rotateY(90deg); }
+  21%    { transform: rotateY(180deg); }
+  24%    { transform: rotateY(270deg); }
+  26%    { transform: rotateY(360deg); }
+  32%    { transform: rotateY(360deg); }
+  35%    { transform: rotateY(540deg); }
+  37%    { transform: rotateY(720deg); }
+  44%    { transform: rotateY(720deg); }
+  52%    { transform: rotateY(810deg); }
+  55%    { transform: rotateY(900deg); }
+  57.5%  { transform: rotateY(990deg); }
+  60%    { transform: rotateY(1080deg); }
+  100%   { transform: rotateY(1080deg); }
+}
+
+.coin-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.coin-front { background: transparent; }
+
+.coin-front-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.coin-back {
+  background: var(--soft-grad);
+  transform: rotateY(180deg);
+}
+
+/* ============================================================
+   VISUALIZER — bottom of hero, tall (≈55vh)
+   z-index 2: above overlay(1), below IO(3) and profile text(5)
+============================================================ */
+.wave-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 68vh;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#visualizerCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================================
+   SCROLL SPACER
+============================================================ */
+.scroll-spacer {
+  height: 92vh;
+  position: relative;
+  z-index: 0;
+}
+
+/* ============================================================
+   IO GLITCH — avatar class used by glitch.js
+============================================================ */
+@keyframes glitchFlash {
+  0%   { transform: none;              filter: none; }
+  18%  { transform: translateX(5px);   filter: hue-rotate(80deg)  saturate(3) brightness(1.3); }
+  36%  { transform: translateX(-4px)   scaleX(1.015); filter: none; }
+  54%  { transform: translateX(6px);   filter: hue-rotate(200deg) brightness(1.5) saturate(2); }
+  72%  { transform: translateX(-3px);  filter: invert(0.25); }
+  90%  { transform: translateX(2px);   filter: hue-rotate(300deg) saturate(2); }
+  100% { transform: none;              filter: none; }
+}
+
+.avatar.glitching {
+  animation: glitchFlash 0.29s steps(4) forwards;
+}
+
+/* ============================================================
+   PHONK SECTION
+============================================================ */
+.phonk-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  background-color: var(--dark-navy);
+  /* background-image removed — glitch canvas handles bg.png */
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* glitch canvas — rendered by glitch.js (bg.png + glitch effects) */
+#glitch-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* dark overlay for text readability — above canvas */
+.phonk-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(5,8,16,.88) 0%, rgba(5,8,16,.72) 40%, rgba(5,8,16,.82) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* content wrapper — above both canvas and overlay */
+.phonk-content {
+  position: relative;
+  z-index: 2;
+  padding: 5rem 3rem 6rem;
+}
+
+.phonk-header { margin-bottom: 3.5rem; border-left: 2px solid var(--neon-blue); padding-left: 1.2rem; }
+.phonk-eyebrow { font-size: .6rem; letter-spacing: .4em; text-transform: uppercase; color: var(--neon-blue); font-weight: 300; margin-bottom: .5rem; }
+.phonk-title { font-size: clamp(1.6rem,4vw,3rem); font-weight: 100; color: var(--white); letter-spacing: .08em; line-height: 1.1; }
+.phonk-title span { color: var(--neon-pink); font-weight: 300; }
+
+/* ============================================================
+   TRACK GRID
+============================================================ */
+.tracks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+@media (max-width: 1100px) { .tracks-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 720px)  { .tracks-grid { grid-template-columns: repeat(3, 1fr); } .phonk-content { padding: 4rem 1.5rem 5rem; } }
+@media (max-width: 480px)  { .tracks-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ============================================================
+   TRACK CARD
+============================================================ */
+.track-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 4px;
+  padding: 1.4rem 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  cursor: pointer;
+  position: relative;
+  transition: background .3s;
+  user-select: none;
+}
+
+@keyframes cardGlow {
+  0%   { box-shadow: 0 0 8px var(--neon-blue), 0 0 22px rgba(0,212,255,.35); border-color: rgba(0,212,255,.75); }
+  50%  { box-shadow: 0 0 14px var(--neon-pink), 0 0 34px rgba(255,45,120,.42); border-color: rgba(255,45,120,.75); }
+  100% { box-shadow: 0 0 8px var(--neon-blue), 0 0 22px rgba(0,212,255,.35); border-color: rgba(0,212,255,.75); }
+}
+
+.track-card:hover  { background: rgba(0,212,255,.04); animation: cardGlow 2s ease-in-out infinite; }
+.track-card.playing { animation: cardGlow 1.5s ease-in-out infinite; }
+
+.track-jacket {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 2px;
+  display: block;
+  pointer-events: none;
+  opacity: 0.88;
+}
+
+.track-number { font-size: .55rem; letter-spacing: .3em; color: var(--neon-blue-dim); font-weight: 300; pointer-events: none; }
+.track-genre  { font-size: .5rem;  letter-spacing: .35em; text-transform: uppercase; color: var(--neon-pink-dim); font-weight: 300; pointer-events: none; }
+.track-title  { font-size: .72rem; color: rgba(255,255,255,.85); font-weight: 300; line-height: 1.5; letter-spacing: .02em; pointer-events: none; }
+
+.track-player    { display: flex; flex-direction: column; gap: .5rem; margin-top: .3rem; }
+.player-controls { display: flex; align-items: center; gap: .7rem; pointer-events: none; }
+
+.play-indicator {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid rgba(0,212,255,.4);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--neon-blue);
+  transition: border-color .25s, color .25s;
+}
+.play-indicator svg { width: 11px; height: 11px; fill: currentColor; }
+.track-card.playing .play-indicator { border-color: var(--neon-pink); color: var(--neon-pink); }
+
+.time-display { font-size: .55rem; color: rgba(255,255,255,.35); font-variant-numeric: tabular-nums; letter-spacing: .05em; white-space: nowrap; }
+
+.progress-bar-wrap { width: 100%; height: 2px; background: rgba(255,255,255,.08); border-radius: 2px; cursor: pointer; position: relative; pointer-events: all; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg,var(--neon-blue),var(--neon-pink)); border-radius: 2px; width: 0%; transition: width .1s linear; pointer-events: none; }
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer {
+  background: var(--dark-navy);
+  border-top: 1px solid rgba(255,255,255,.05);
+  padding: 2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 10;
+}
+.footer-logo { font-size: 1.1rem; font-weight: 100; letter-spacing: .3em; color: rgba(255,255,255,.5); }
+.footer-copy  { font-size: .55rem; color: rgba(255,255,255,.25); letter-spacing: .15em; }
+
+/* ============================================================
+   RESPONSIVE — tablet
+============================================================ */
+@media (max-width: 900px) {
+  .hero-block { left: 6%; }
+  .hero-right { right: 6%; max-width: 260px; }
+  .io-container { gap: 36px; }
+}
+
+/* ============================================================
+   RESPONSIVE — SP
+============================================================ */
+@media (max-width: 600px) {
+  /* SP: stack IO on top, right block below, both centered */
+  .hero-block {
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+  }
+
+  .hero-right {
+    right: auto;
+    left: 50%;
+    top: 65%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    max-width: 88%;
+    gap: 1.2rem;
+  }
+
+  .io-container { gap: 20px; }
+
+  .about-text-block {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .about-label { align-items: center; }
+
+  /* Marquee font smaller */
+  .hero-marquee span { font-size: 0.85rem; }
+
+  /* Hide small decorative text on SP */
+  .about-corner-tag, .hero-left-tag { display: none; }
+
+  /* PHONK */
+  .phonk-content { padding: 3rem 1rem 4rem; }
+  .tracks-grid { grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+
+  .footer { flex-direction: column; gap: .5rem; text-align: center; padding: 1.5rem; }
+}
+
+@media (max-width: 360px) {
+  .tracks-grid { grid-template-columns: 1fr; }
+  .io-container { gap: 14px; }
+}
