@@ -76,10 +76,11 @@
        At fill=1 alpha=0.93 → white background completely gone. */
     if (fill > 0) {
       const W = canvas.width, H = canvas.height;
+      const a = fill * 0.88;
       const bg = ctx.createLinearGradient(0, 0, W, H);
-      bg.addColorStop(0,   col(0,    fill * 0.93));  // #FFC5FC
-      bg.addColorStop(0.5, col(0.4,  fill * 0.88));  // mid
-      bg.addColorStop(1,   col(1,    fill * 0.93));  // #89CAFF
+      bg.addColorStop(0,    `rgba(255,228,254,${a})`);  // 明るいピンク
+      bg.addColorStop(0.5,  `rgba(242,236,255,${a})`);  // 白に近いラベンダー
+      bg.addColorStop(1,    `rgba(218,238,255,${a})`);  // 明るいブルー
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, W, H);
     }
