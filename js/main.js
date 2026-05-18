@@ -52,7 +52,7 @@
     const count = bars.length;
     const barW  = W / count;
     const gap   = Math.max(1, barW * 0.14);
-    const maxH  = H * 0.40;
+    const maxH  = H * 0.32;
 
     /* global breathing swell */
     const swell = 0.11 * Math.sin(t * 0.48) + 0.89;
