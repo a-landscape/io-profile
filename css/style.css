@@ -95,11 +95,10 @@ body {
 /* ============================================================
    HERO LEFT EDGE — decorative text top & bottom
 ============================================================ */
-.hero-left-top,
-.hero-left-bottom {
+.hero-left-top {
   position: absolute;
   left: 2.0rem;
-  writing-mode: vertical-rl;
+  top: 5.2rem;
   font-size: 0.50rem;
   font-weight: 300;
   letter-spacing: 0.12em;
@@ -107,11 +106,29 @@ body {
   z-index: 3;
   pointer-events: none;
 }
-.hero-left-top {
-  top: 6.5rem;
-}
 .hero-left-bottom {
-  bottom: 6.5rem;
+  position: absolute;
+  left: 2.0rem;
+  bottom: 7.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  z-index: 3;
+  pointer-events: none;
+}
+.hero-left-bottom::before {
+  content: '';
+  width: 1px;
+  height: 2.5rem;
+  background: #000000;
+}
+.hero-left-bottom span {
+  writing-mode: vertical-rl;
+  font-size: 0.50rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: #000000;
 }
 
 /* ============================================================
