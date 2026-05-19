@@ -93,22 +93,25 @@ body {
 }
 
 /* ============================================================
-   HERO LEFT TAG — vertical, colorful, aligned to IO left edge
+   HERO LEFT EDGE — decorative text top & bottom
 ============================================================ */
-.hero-left-tag {
+.hero-left-top,
+.hero-left-bottom {
   position: absolute;
   left: 2.0rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.55rem;
-  color: var(--black);
+  writing-mode: vertical-rl;
+  font-size: 0.50rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: #000000;
   z-index: 3;
   pointer-events: none;
-  line-height: 1;
+}
+.hero-left-top {
+  top: 3.8rem;
+}
+.hero-left-bottom {
+  bottom: 2.8rem;
 }
 
 /* ============================================================
@@ -569,7 +572,7 @@ body {
   .hero-marquee span { font-size: 0.85rem; }
 
   /* Hide small decorative text on SP */
-  .about-corner-tag, .hero-left-tag { display: none; }
+  .about-corner-tag, .hero-left-top, .hero-left-bottom { display: none; }
 
   /* PHONK */
   .phonk-content { padding: 3rem 1rem 4rem; }
