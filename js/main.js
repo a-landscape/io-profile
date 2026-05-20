@@ -103,7 +103,7 @@
    TRACK DATA
 ============================================================ */
 const TRACKS = [
-  { id: '01', title: 'MUTILATOR',          genre: 'BRAZILIAN PHONK', src: 'material/mutilator.mp3',       jacket: 'mutilator.jpg'       },
+  { id: '01', title: 'MONTAGEM RITMADA',    genre: 'BRAZILIAN PHONK', src: 'material/MONTAGEM_RITMADA.mp3', jacket: 'MONTAGEM_RITMADA.jpg' },
   { id: '02', title: 'NO BATIDÃO',         genre: 'BRAZILIAN PHONK', src: 'material/NO_BATID.mp3',        jacket: 'NO_BAT.jpg'          },
   { id: '03', title: 'PASSO BEM',          genre: 'BRAZILIAN PHONK', src: 'material/PASSO_BEM.m4a',       jacket: 'PASSO_BEM.jpg'       },
   { id: '04', title: 'VAI VAI TRAIR',      genre: 'BRAZILIAN PHONK', src: 'material/VAI_VAI_TRAIR.mp3',   jacket: 'vai.jpg'             },
