@@ -481,10 +481,11 @@ body {
   background: rgba(255,255,255,.03);
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 4px;
-  padding: 1.4rem 1.2rem 1rem;
+  padding: .8rem 1rem;
   display: flex;
-  flex-direction: column;
-  gap: .7rem;
+  flex-direction: row;
+  gap: .9rem;
+  align-items: center;
   cursor: pointer;
   position: relative;
   transition: background .3s;
@@ -501,13 +502,22 @@ body {
 .track-card.playing { animation: cardGlow 1.5s ease-in-out infinite; }
 
 .track-jacket {
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
   object-fit: cover;
   border-radius: 2px;
   display: block;
   pointer-events: none;
   opacity: 0.88;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .track-number { font-size: .55rem; letter-spacing: .3em; color: var(--neon-blue-dim); font-weight: 300; pointer-events: none; }

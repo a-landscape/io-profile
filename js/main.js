@@ -164,15 +164,17 @@ TRACKS.forEach((track, idx) => {
   card.className = 'track-card';
   card.innerHTML = `
     <img src="material/${track.jacket}" alt="jacket" class="track-jacket" draggable="false" oncontextmenu="return false" />
-    <div class="track-number">Favorite ${track.id}</div>
-    <div class="track-genre">${track.genre}</div>
-    <div class="track-title">${track.title}</div>
-    <div class="track-player">
-      <div class="player-controls">
-        <span class="play-indicator">${ICON_PLAY}</span>
-        <span class="time-display"><span class="cur">0:00</span> / <span class="dur">—</span></span>
+    <div class="track-info">
+      <div class="track-number">Favorite ${track.id}</div>
+      <div class="track-genre">${track.genre}</div>
+      <div class="track-title">${track.title}</div>
+      <div class="track-player">
+        <div class="player-controls">
+          <span class="play-indicator">${ICON_PLAY}</span>
+          <span class="time-display"><span class="cur">0:00</span> / <span class="dur">—</span></span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
       </div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
     </div>`;
 
   (idx < 7 ? col1 : col2).appendChild(card);
