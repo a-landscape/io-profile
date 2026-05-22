@@ -243,10 +243,14 @@ function playFromIdx(idx) {
   audio.addEventListener('ended', audio._onEndedPlayAll);
 
   audio.currentTime = 0;
-  audio.play().catch(() => {});
-  card.querySelector('.play-indicator').innerHTML = ICON_PAUSE;
-  card.classList.add('playing');
-  activeIdx = idx;
+  audio.play().then(() => {
+    card.querySelector('.play-indicator').innerHTML = ICON_PAUSE;
+    card.classList.add('playing');
+    activeIdx = idx;
+  }).catch(e => {
+    console.error('Play failed:', TRACKS[idx].src, e);
+    resetCard(idx);
+  });
 }
 
 function toggleCard(idx) {
@@ -279,10 +283,14 @@ function toggleCard(idx) {
   if (!audio.paused) {
     audio.pause(); resetCard(idx);
   } else {
-    audio.play().catch(() => {});
-    card.querySelector('.play-indicator').innerHTML = ICON_PAUSE;
-    card.classList.add('playing');
-    activeIdx = idx;
+    audio.play().then(() => {
+      card.querySelector('.play-indicator').innerHTML = ICON_PAUSE;
+      card.classList.add('playing');
+      activeIdx = idx;
+    }).catch(e => {
+      console.error('Play failed:', TRACKS[idx].src, e);
+      resetCard(idx);
+    });
   }
 }
 
