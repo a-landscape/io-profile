@@ -479,7 +479,6 @@ body {
   transition: background .25s, border-color .25s, color .25s;
   flex-shrink: 0;
 }
-.play-all-btn svg { width: 9px; height: 9px; fill: currentColor; flex-shrink: 0; }
 .play-all-btn:hover { background: rgba(0,212,255,.08); border-color: var(--neon-blue); }
 .play-all-btn.active { border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,120,.08); }
 

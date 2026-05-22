@@ -191,8 +191,6 @@ let playAllMode = false;
 
 const playAllBtn   = document.getElementById('playAllBtn');
 const playAllLabel = playAllBtn.querySelector('.play-all-label');
-const ICON_PLAY_ALL  = `<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>`;
-const ICON_STOP_ALL  = `<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16"/></svg>`;
 
 playAllBtn.addEventListener('click', () => {
   if (playAllMode) {
@@ -205,14 +203,14 @@ playAllBtn.addEventListener('click', () => {
 function startPlayAll() {
   playAllMode = true;
   playAllBtn.querySelector('svg').outerHTML; // replaced below
-  playAllBtn.innerHTML = `${ICON_STOP_ALL}<span class="play-all-label">Stop</span>`;
+  playAllBtn.innerHTML = `<span class="play-all-label">Stop</span>`;
   playAllBtn.classList.add('active');
   playFromIdx(0);
 }
 
 function stopPlayAll() {
   playAllMode = false;
-  playAllBtn.innerHTML = `${ICON_PLAY_ALL}<span class="play-all-label">Play All</span>`;
+  playAllBtn.innerHTML = `<span class="play-all-label">Play All</span>`;
   playAllBtn.classList.remove('active');
   if (activeIdx !== -1) {
     const prev = audioPool.get(activeIdx);
