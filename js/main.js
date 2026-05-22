@@ -115,6 +115,8 @@ const TRACKS = [
   { id: '10', title: 'LUNA BALA',          genre: 'BRAZILIAN PHONK', src: 'material/LUNA_BALA.mp3',       jacket: 'LUNA-BALA.jpg'       },
   { id: '11', title: 'MONTAGEM XONADA',    genre: 'BRAZILIAN PHONK', src: 'material/MONTAGEM_XONADA.mp3', jacket: 'MONTAGEM_XONADA.jpg' },
   { id: '12', title: 'PXLWYSE',            genre: 'BRAZILIAN PHONK', src: 'material/PXLWYSE.m4a',         jacket: 'PXLWYSE.jpg'         },
+  { id: '13', title: 'MONTAGEM RUGADA',   genre: 'BRAZILIAN PHONK', src: 'material/MONTAGEM_RUGADA.mp3', jacket: 'MONTAGEM_RUGADA.jpg' },
+  { id: '14', title: 'MUTILATOR',         genre: 'BRAZILIAN PHONK', src: 'material/mutilator.mp3',       jacket: 'mutilator.jpg'       },
 ];
 
 const ICON_PLAY  = `<svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>`;
