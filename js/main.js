@@ -152,6 +152,13 @@ async function getAudio(idx) {
 ============================================================ */
 const grid = document.getElementById('tracksGrid');
 
+const col1 = document.createElement('div');
+col1.className = 'tracks-col';
+const col2 = document.createElement('div');
+col2.className = 'tracks-col';
+grid.appendChild(col1);
+grid.appendChild(col2);
+
 TRACKS.forEach((track, idx) => {
   const card = document.createElement('article');
   card.className = 'track-card';
@@ -167,7 +174,8 @@ TRACKS.forEach((track, idx) => {
       </div>
       <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
     </div>`;
-  grid.appendChild(card);
+
+  (idx < 7 ? col1 : col2).appendChild(card);
 
   card.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -187,8 +195,13 @@ TRACKS.forEach((track, idx) => {
 ============================================================ */
 let activeIdx = -1;
 
+function getCard(idx) {
+  const col = idx < 7 ? col1 : col2;
+  return col.children[idx < 7 ? idx : idx - 7];
+}
+
 async function toggleCard(idx) {
-  const card  = grid.children[idx];
+  const card  = getCard(idx);
   const audio = await getAudio(idx);
 
   if (!audio._bound) {
@@ -220,7 +233,7 @@ async function toggleCard(idx) {
 }
 
 function resetCard(idx) {
-  const card = grid.children[idx];
+  const card = getCard(idx);
   card.querySelector('.play-indicator').innerHTML = ICON_PLAY;
   card.classList.remove('playing');
   if (activeIdx === idx) activeIdx = -1;
