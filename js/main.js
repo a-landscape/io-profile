@@ -132,17 +132,9 @@ function fmt(sec) {
 ============================================================ */
 const audioPool = new Map();
 
-async function getAudio(idx) {
+function getAudio(idx) {
   if (audioPool.has(idx)) return audioPool.get(idx);
-  const src = TRACKS[idx].src;
-  let audio;
-  try {
-    const res  = await fetch(src, { cache: 'force-cache' });
-    if (!res.ok) throw new Error();
-    audio = new Audio(URL.createObjectURL(await res.blob()));
-  } catch {
-    audio = new Audio(src);
-  }
+  const audio = new Audio(TRACKS[idx].src);
   audioPool.set(idx, audio);
   return audio;
 }
@@ -172,9 +164,9 @@ TRACKS.forEach((track, idx) => {
 
   card.addEventListener('contextmenu', e => e.preventDefault());
 
-  card.querySelector('.progress-bar-wrap').addEventListener('click', async e => {
+  card.querySelector('.progress-bar-wrap').addEventListener('click', e => {
     e.stopPropagation();
-    const audio = await getAudio(idx);
+    const audio = getAudio(idx);
     if (!audio.duration) return;
     const bar = e.currentTarget;
     audio.currentTime = ((e.clientX - bar.getBoundingClientRect().left) / bar.offsetWidth) * audio.duration;
@@ -202,7 +194,6 @@ playAllBtn.addEventListener('click', () => {
 
 function startPlayAll() {
   playAllMode = true;
-  playAllBtn.querySelector('svg').outerHTML; // replaced below
   playAllBtn.innerHTML = `<span class="play-all-label">Stop</span>`;
   playAllBtn.classList.add('active');
   playFromIdx(0);
@@ -218,7 +209,7 @@ function stopPlayAll() {
   }
 }
 
-async function playFromIdx(idx) {
+function playFromIdx(idx) {
   if (!playAllMode) return;
 
   // stop current
@@ -228,7 +219,7 @@ async function playFromIdx(idx) {
   }
 
   const card  = grid.children[idx];
-  const audio = await getAudio(idx);
+  const audio = getAudio(idx);
 
   if (!audio._bound) {
     audio._bound = true;
@@ -258,9 +249,9 @@ async function playFromIdx(idx) {
   activeIdx = idx;
 }
 
-async function toggleCard(idx) {
+function toggleCard(idx) {
   const card  = grid.children[idx];
-  const audio = await getAudio(idx);
+  const audio = getAudio(idx);
 
   if (!audio._bound) {
     audio._bound = true;
