@@ -186,7 +186,79 @@ TRACKS.forEach((track, idx) => {
 /* ============================================================
    PLAYBACK
 ============================================================ */
-let activeIdx = -1;
+let activeIdx  = -1;
+let playAllMode = false;
+
+const playAllBtn   = document.getElementById('playAllBtn');
+const playAllLabel = playAllBtn.querySelector('.play-all-label');
+const ICON_PLAY_ALL  = `<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>`;
+const ICON_STOP_ALL  = `<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16"/></svg>`;
+
+playAllBtn.addEventListener('click', () => {
+  if (playAllMode) {
+    stopPlayAll();
+  } else {
+    startPlayAll();
+  }
+});
+
+function startPlayAll() {
+  playAllMode = true;
+  playAllBtn.querySelector('svg').outerHTML; // replaced below
+  playAllBtn.innerHTML = `${ICON_STOP_ALL}<span class="play-all-label">Stop</span>`;
+  playAllBtn.classList.add('active');
+  playFromIdx(0);
+}
+
+function stopPlayAll() {
+  playAllMode = false;
+  playAllBtn.innerHTML = `${ICON_PLAY_ALL}<span class="play-all-label">Play All</span>`;
+  playAllBtn.classList.remove('active');
+  if (activeIdx !== -1) {
+    const prev = audioPool.get(activeIdx);
+    if (prev && !prev.paused) { prev.pause(); resetCard(activeIdx); }
+  }
+}
+
+async function playFromIdx(idx) {
+  if (!playAllMode) return;
+
+  // stop current
+  if (activeIdx !== -1 && activeIdx !== idx) {
+    const prev = audioPool.get(activeIdx);
+    if (prev && !prev.paused) { prev.pause(); resetCard(activeIdx); }
+  }
+
+  const card  = grid.children[idx];
+  const audio = await getAudio(idx);
+
+  if (!audio._bound) {
+    audio._bound = true;
+    audio.addEventListener('loadedmetadata', () => {
+      card.querySelector('.dur').textContent = fmt(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+      card.querySelector('.cur').textContent = fmt(audio.currentTime);
+      const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+      card.querySelector('.progress-bar-fill').style.width = pct + '%';
+    });
+  }
+
+  // override ended to advance to next track
+  audio._onEndedPlayAll = () => {
+    resetCard(idx);
+    const next = (idx + 1) % TRACKS.length;
+    playFromIdx(next);
+  };
+  audio.removeEventListener('ended', audio._onEndedPlayAll);
+  audio.addEventListener('ended', audio._onEndedPlayAll);
+
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
+  card.querySelector('.play-indicator').innerHTML = ICON_PAUSE;
+  card.classList.add('playing');
+  activeIdx = idx;
+}
 
 async function toggleCard(idx) {
   const card  = grid.children[idx];
@@ -202,13 +274,18 @@ async function toggleCard(idx) {
       const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
       card.querySelector('.progress-bar-fill').style.width = pct + '%';
     });
-    audio.addEventListener('ended', () => resetCard(idx));
+    audio.addEventListener('ended', () => {
+      if (!playAllMode) resetCard(idx);
+    });
   }
 
   if (activeIdx !== -1 && activeIdx !== idx) {
     const prev = audioPool.get(activeIdx);
     if (prev && !prev.paused) { prev.pause(); resetCard(activeIdx); }
   }
+
+  // カードをクリックしたらPlay Allモード解除
+  if (playAllMode) stopPlayAll();
 
   if (!audio.paused) {
     audio.pause(); resetCard(idx);
