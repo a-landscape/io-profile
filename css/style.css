@@ -14,7 +14,7 @@
   --neon-blue-dim: rgba(0,212,255,0.6);
   --neon-pink: #ff2d78;
   --neon-pink-dim: rgba(255,45,120,0.6);
-  --soft-grad: linear-gradient(135deg, #FFC5FC 0%, #89CAFF 100%);
+  --soft-grad: linear-gradient(135deg, #FFB3F7 0%, #D08EFF 50%, #A855F7 100%);
 
   --ring-size: clamp(4.8rem, 16vw, 14.4rem);
 }
