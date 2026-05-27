@@ -360,16 +360,8 @@ body {
 }
 
 .coin-back {
-  background: transparent;
+  background: var(--soft-grad);
   transform: rotateY(180deg);
-}
-
-.coin-back-icon {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  display: block;
 }
 
 /* ============================================================
